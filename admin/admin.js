@@ -13,6 +13,80 @@ function getPassword() {
     return localStorage.getItem(PASS_KEY) || DEFAULT_PASS;
 }
 
+// ===== PUBLIKASI KE GITHUB =====
+const GITHUB_REPO = 'ardiii278/aurisgroup-website';
+const GH_TOKEN_KEY = 'auris_gh_token';
+
+function getGitHubToken() {
+    return localStorage.getItem(GH_TOKEN_KEY) || '';
+}
+
+function toBase64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+}
+
+async function publishToGitHub() {
+    const token = getGitHubToken();
+    if (!token) {
+        alert('GitHub token belum diisi.\nBuka Pengaturan → Publikasi ke GitHub untuk memasukkan token.');
+        openSection('settings');
+        return;
+    }
+
+    const btn = document.getElementById('publishBtn');
+    const setBtn = (busy) => {
+        if (!btn) return;
+        btn.disabled = busy;
+        btn.innerHTML = busy
+            ? '<i class="fas fa-spinner fa-spin"></i> Mempublikasikan...'
+            : '<i class="fas fa-cloud-arrow-up"></i> Publish ke Website';
+    };
+    setBtn(true);
+
+    try {
+        const content = JSON.stringify(data, null, 2);
+        const base64 = toBase64(content);
+        const headers = {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+        };
+
+        let sha = null;
+        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data.json`, { headers });
+        if (getRes.ok) {
+            const j = await getRes.json();
+            sha = j.sha;
+        } else if (getRes.status !== 404) {
+            throw new Error('Gagal membaca repository (status ' + getRes.status + '). Periksa token Anda.');
+        }
+
+        const body = { message: 'Update konten website (dari admin panel)', content: base64, branch: 'main' };
+        if (sha) body.sha = sha;
+
+        const putRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data.json`, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(body)
+        });
+
+        if (!putRes.ok) {
+            const err = await putRes.json().catch(() => ({}));
+            throw new Error(err.message || ('GitHub menolak permintaan (status ' + putRes.status + ')'));
+        }
+
+        alert('✅ Berhasil dipublikasikan!\nCloudflare Pages akan auto-deploy dalam 1-2 menit.');
+    } catch (e) {
+        alert('❌ Publikasi gagal: ' + e.message);
+    } finally {
+        setBtn(false);
+    }
+}
+
+
 const loginScreen = document.getElementById('loginScreen');
 const dashboard = document.getElementById('dashboard');
 const loginForm = document.getElementById('loginForm');
@@ -808,6 +882,23 @@ function renderSettings() {
                 Website membaca konten dengan prioritas: hasil edit di browser ini (localStorage) → file <code>data.json</code> → konten bawaan.
                 Di hosting statis tanpa backend, publikasikan perubahan dengan Export <code>data.json</code> lalu unggah ke folder website.
             </p>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title" style="margin-bottom: 20px;"><i class="fab fa-github"></i> Publikasi ke GitHub (Otomatis)</h2>
+            <p class="card-note">Dengan token GitHub, tombol <b>Publish ke Website</b> langsung mengirim <code>data.json</code> ke repository dan memicu auto-deploy Cloudflare Pages — tanpa export manual.</p>
+            <div class="form-group">
+                <label for="ghTokenInput">GitHub Token (fine-grained, cukup repo ini)</label>
+                <input type="password" id="ghTokenInput" placeholder="github_pat_..." value="${esc(getGitHubToken())}" autocomplete="off">
+            </div>
+            <div style="margin-top: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <button type="button" class="btn-primary" id="saveGhTokenBtn"><i class="fas fa-save"></i> Simpan Token</button>
+                <button type="button" class="btn-primary" id="publishSettingsBtn"><i class="fas fa-cloud-arrow-up"></i> Publish Sekarang</button>
+                <span id="ghMsg" class="inline-msg"></span>
+            </div>
+            <p class="card-note" style="margin-top: 14px;">
+                Cara buat token: GitHub → Settings → Developer settings → Personal access tokens → <b>Fine-grained tokens</b> → pilih repo <code>ardiii278/aurisgroup-website</code> → permission <b>Contents: Read and write</b>.
+            </p>
         </div>`;
 
     updateStorageInfo();
@@ -886,6 +977,20 @@ function renderSettings() {
         save();
         openSection('navbar');
     });
+
+    document.getElementById('saveGhTokenBtn').addEventListener('click', () => {
+        const token = document.getElementById('ghTokenInput').value.trim();
+        localStorage.setItem(GH_TOKEN_KEY, token);
+        const msg = document.getElementById('ghMsg');
+        msg.classList.remove('error');
+        msg.textContent = token ? 'Token tersimpan ✓' : 'Token dikosongkan.';
+    });
+
+    document.getElementById('publishSettingsBtn').addEventListener('click', () => {
+        const token = document.getElementById('ghTokenInput').value.trim();
+        if (token) localStorage.setItem(GH_TOKEN_KEY, token);
+        publishToGitHub();
+    });
 }
 
 function updateStorageInfo() {
@@ -931,4 +1036,7 @@ async function initDashboard() {
     renderSidebar();
     await detectServer();
     openSection('navbar');
+
+    const publishBtn = document.getElementById('publishBtn');
+    if (publishBtn) publishBtn.addEventListener('click', publishToGitHub);
 }
