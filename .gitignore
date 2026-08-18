@@ -1,10 +1,5 @@
-# Deployment files
+# Environment
 .env
-wrangler.toml
-DEPLOY.md
-DEPLOY-CHECKLIST.md
-SWAP-DOMAIN.md
-TUNNEL-SETUP.md
 
 # OS files
 .DS_Store
