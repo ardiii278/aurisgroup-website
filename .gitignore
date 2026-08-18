@@ -1,0 +1,16 @@
+# Deployment files
+.env
+wrangler.toml
+DEPLOY.md
+DEPLOY-CHECKLIST.md
+SWAP-DOMAIN.md
+TUNNEL-SETUP.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
