@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_2_00000049219748145392548660000006539855802459549331_"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 283.5 283.5"
+	 style="enable-background:new 0 0 283.5 283.5;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:url(#SVGID_00000051350791000773270610000001649717638441737373_);}
+	.st2{fill:url(#SVGID_00000142144013679154716350000002594435925010678661_);}
+	.st3{fill:none;stroke:#FFFFFF;stroke-width:1.25;stroke-miterlimit:10;}
+	.st4{fill:none;}
+	.st5{fill:#FFFFFF;}
+	.st6{font-family:'Montserrat-Regular';}
+	.st7{font-size:19px;}
+	.st8{font-size:13px;}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="14.93" y1="152.5596" x2="111.54" y2="152.5596" gradientTransform="matrix(1 0 0 -1 0 283.4646)">
+	<stop  offset="0" style="stop-color:#C2A846"/>
+	<stop  offset="0.3817" style="stop-color:#AD933C"/>
+	<stop  offset="1" style="stop-color:#947A2F"/>
+</linearGradient>
+<polygon class="st0" points="111.5,113.7 111.5,169.5 100.2,176 100.2,120.2 92.4,115.7 81.1,109.2 63.2,98.9 45.4,109.2 
+	34.1,115.7 26.3,120.2 26.3,176 14.9,169.5 14.9,113.7 26.3,107.1 34.1,102.6 63.2,85.8 81.1,96.1 92.4,102.6 100.2,107.1 "/>
+<linearGradient id="SVGID_00000171694959643800288740000014473020194254935691_" gradientUnits="userSpaceOnUse" x1="81.06" y1="110.7296" x2="92.4" y2="110.7296" gradientTransform="matrix(1 0 0 -1 0 283.4646)">
+	<stop  offset="0" style="stop-color:#C2A846"/>
+	<stop  offset="0.3817" style="stop-color:#AD933C"/>
+	<stop  offset="1" style="stop-color:#947A2F"/>
+</linearGradient>
+<polygon style="fill:url(#SVGID_00000171694959643800288740000014473020194254935691_);" points="92.4,158.4 92.4,180.5 81.1,187.1 
+	81.1,165 "/>
+<linearGradient id="SVGID_00000084499155008489724400000001799140707472369061_" gradientUnits="userSpaceOnUse" x1="34.07" y1="135.9896" x2="92.4" y2="135.9896" gradientTransform="matrix(1 0 0 -1 0 283.4646)">
+	<stop  offset="0" style="stop-color:#C2A846"/>
+	<stop  offset="0.3817" style="stop-color:#AD933C"/>
+	<stop  offset="1" style="stop-color:#947A2F"/>
+</linearGradient>
+<polygon style="fill:url(#SVGID_00000084499155008489724400000001799140707472369061_);" points="92.4,124.7 92.4,145.3 81.1,151.9 
+	81.1,131.3 63.2,121 45.4,131.3 45.4,151.9 63.2,162.2 81.1,151.9 81.1,165 63.2,175.2 45.4,165 45.4,187.1 34.1,180.5 34.1,124.7 
+	45.4,118.2 63.2,107.9 81.1,118.2 "/>
+<line class="st3" x1="120.1" y1="98.5" x2="120.1" y2="185.1"/>
+<rect x="128.6" y="114.9" class="st4" width="154.8" height="15.4"/>
+<text transform="matrix(1 0 0 1 128.6263 128.9889)" class="st5 st6 st7">AURIS Group</text>
+<rect x="128.7" y="138.2" class="st4" width="137.4" height="33.4"/>
+<text transform="matrix(1 0 0 1 128.6647 147.8184)" class="st5 st6 st8">ARCHITECTURE &amp;</text>
+<text transform="matrix(1 0 0 1 128.6647 163.4184)" class="st5 st6 st8">INTERIOR</text>
+</svg>

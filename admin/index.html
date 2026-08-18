@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — AURIS Group</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- LOGIN -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <img src="../logo.svg" alt="AURIS Group" class="login-logo">
+            <h1>Admin Panel</h1>
+            <p>Masuk untuk mengelola seluruh konten website.</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="userInput">Username</label>
+                    <input type="text" id="userInput" placeholder="Masukkan username" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="passInput">Password</label>
+                    <input type="password" id="passInput" placeholder="Masukkan password" autocomplete="current-password">
+                </div>
+                <p id="loginError" class="login-error"></p>
+                <button type="submit" class="btn-primary btn-full">
+                    <i class="fas fa-right-to-bracket"></i>
+                    <span>Masuk</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="dashboard hidden">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <img src="../logo.svg" alt="AURIS Group">
+                <span>Admin Panel</span>
+            </div>
+            <nav id="sidebarNav" class="sidebar-nav"></nav>
+            <div class="sidebar-footer">
+                <a href="../index.html" target="_blank" class="side-footer-link">
+                    <i class="fas fa-eye"></i><span>Lihat Situs</span>
+                </a>
+                <button id="logoutBtn" class="side-footer-link">
+                    <i class="fas fa-arrow-right-from-bracket"></i><span>Keluar</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <h1 id="sectionTitle">Dashboard</h1>
+                <div class="topbar-actions">
+                    <span id="saveStatus" class="save-status">Tersimpan</span>
+                    <a href="../index.html" target="_blank" class="btn-outline btn-sm">
+                        <i class="fas fa-eye"></i><span>Preview Situs</span>
+                    </a>
+                </div>
+            </header>
+            <div id="contentArea" class="content-area"></div>
+        </main>
+    </div>
+
+    <!-- Datalist saran ikon Font Awesome -->
+    <datalist id="iconList">
+        <option value="fas fa-building"></option>
+        <option value="fas fa-couch"></option>
+        <option value="fas fa-bolt"></option>
+        <option value="fas fa-water"></option>
+        <option value="fas fa-calendar-star"></option>
+        <option value="fas fa-drafting-compass"></option>
+        <option value="fas fa-hard-hat"></option>
+        <option value="fas fa-home"></option>
+        <option value="fas fa-briefcase"></option>
+        <option value="fas fa-laptop-house"></option>
+        <option value="fas fa-mug-hot"></option>
+        <option value="fas fa-coffee"></option>
+        <option value="fas fa-tree"></option>
+        <option value="fas fa-project-diagram"></option>
+        <option value="fas fa-handshake"></option>
+        <option value="fas fa-user-tie"></option>
+        <option value="fas fa-map-marker-alt"></option>
+        <option value="fas fa-envelope"></option>
+        <option value="fas fa-clock"></option>
+        <option value="fas fa-phone"></option>
+        <option value="fas fa-phone-alt"></option>
+        <option value="fas fa-star"></option>
+        <option value="fas fa-check-circle"></option>
+        <option value="fas fa-users"></option>
+        <option value="fas fa-tools"></option>
+        <option value="fab fa-whatsapp"></option>
+        <option value="fab fa-instagram"></option>
+        <option value="fab fa-facebook-f"></option>
+        <option value="fab fa-tiktok"></option>
+        <option value="fab fa-youtube"></option>
+    </datalist>
+    <datalist id="anchorList">
+        <option value="#home"></option>
+        <option value="#about"></option>
+        <option value="#services"></option>
+        <option value="#projects"></option>
+        <option value="#testimonials"></option>
+        <option value="#contact"></option>
+        <option value="#"></option>
+    </datalist>
+
+    <script src="../data.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
