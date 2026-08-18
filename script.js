@@ -168,7 +168,7 @@ function renderProjects() {
         </div>
         <div class="projects-grid">
             ${p.items.map((it, i) => `
-                <div class="project-card" data-category="${esc(it.category)}" data-aos="fade-up" data-aos-delay="${100 * (i + 1)}">
+                <div class="project-card" data-category="${esc(it.category)}" data-project-index="${i}" data-aos="fade-up" data-aos-delay="${100 * (i + 1)}">
                     <div class="project-img">
                         ${it.image
                             ? `<img src="${esc(it.image)}" alt="${esc(it.title)}" class="project-photo" loading="lazy">`
@@ -177,6 +177,7 @@ function renderProjects() {
                             <span class="project-category">${esc(it.catLabel)}</span>
                             <h3 class="project-title">${esc(it.title)}</h3>
                             <p class="project-location"><i class="fas fa-map-marker-alt"></i> ${esc(it.location)}</p>
+                            <span class="project-view"><i class="far fa-images"></i> Lihat Galeri</span>
                         </div>
                     </div>
                 </div>`).join('')}
@@ -474,6 +475,124 @@ function bindInteractions() {
                 }
             });
         });
+    });
+
+    // ===== PROJECT GALLERY =====
+    const galleryModal = document.getElementById('galleryModal');
+    const galleryModalBody = document.getElementById('galleryModalBody');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+
+    let lightboxImages = [];
+    let lightboxIndex = 0;
+
+    function galleryImagesOf(project) {
+        const list = (project.gallery && project.gallery.length)
+            ? project.gallery
+            : [project.image].filter(Boolean);
+        return list;
+    }
+
+    function openGallery(index) {
+        const project = content.projects.items[index];
+        if (!project) return;
+
+        const images = galleryImagesOf(project);
+
+        const gridHtml = images.length
+            ? `<div class="gallery-grid">
+                ${images.map((src, i) => `
+                    <div class="gallery-item" data-lightbox="${i}">
+                        <img src="${esc(src)}" alt="${esc(project.title)} - Foto ${i + 1}" loading="lazy">
+                        <div class="gallery-item-zoom"><i class="fas fa-search-plus"></i></div>
+                    </div>`).join('')}
+            </div>`
+            : `<div class="gallery-empty">
+                <i class="${esc(project.icon)}"></i>
+                <p>Foto galeri untuk proyek ini segera hadir.</p>
+            </div>`;
+
+        galleryModalBody.innerHTML = `
+            <div class="gallery-header">
+                <span class="project-category">${esc(project.catLabel)}</span>
+                <h3 class="gallery-title">${esc(project.title)}</h3>
+                <p class="gallery-location"><i class="fas fa-map-marker-alt"></i> ${esc(project.location)}</p>
+            </div>
+            ${gridHtml}`;
+
+        lightboxImages = images;
+        lightboxIndex = 0;
+        galleryModal.classList.add('open');
+        galleryModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeGallery() {
+        galleryModal.classList.remove('open');
+        galleryModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    function updateLightbox() {
+        if (!lightboxImages.length) return;
+        lightboxImg.src = lightboxImages[lightboxIndex];
+        lightboxCounter.textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
+    }
+
+    function openLightbox(index) {
+        if (!lightboxImages.length) return;
+        lightboxIndex = index;
+        updateLightbox();
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = galleryModal.classList.contains('open') ? 'hidden' : '';
+    }
+
+    function lightboxNav(dir) {
+        if (!lightboxImages.length) return;
+        lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+        updateLightbox();
+    }
+
+    projectCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const index = parseInt(card.getAttribute('data-project-index'), 10);
+            openGallery(index);
+        });
+    });
+
+    galleryModalBody.addEventListener('click', (e) => {
+        const item = e.target.closest('.gallery-item');
+        if (item) {
+            openLightbox(parseInt(item.getAttribute('data-lightbox'), 10));
+        }
+    });
+
+    galleryModal.querySelectorAll('[data-close-gallery]').forEach(el => {
+        el.addEventListener('click', closeGallery);
+    });
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxPrev').addEventListener('click', () => lightboxNav(-1));
+    document.getElementById('lightboxNext').addEventListener('click', () => lightboxNav(1));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (lightbox.classList.contains('open')) {
+                closeLightbox();
+            } else if (galleryModal.classList.contains('open')) {
+                closeGallery();
+            }
+        } else if (lightbox.classList.contains('open')) {
+            if (e.key === 'ArrowLeft') lightboxNav(-1);
+            if (e.key === 'ArrowRight') lightboxNav(1);
+        }
     });
 
     // ===== CONTACT FORM =====

@@ -160,6 +160,26 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
+    <!-- Project Gallery Modal -->
+    <div id="galleryModal" class="gallery-modal" aria-hidden="true">
+        <div class="gallery-modal-backdrop" data-close-gallery></div>
+        <div class="gallery-modal-content" role="dialog" aria-modal="true">
+            <button class="gallery-modal-close" data-close-gallery aria-label="Tutup">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="galleryModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Tutup"><i class="fas fa-times"></i></button>
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Sebelumnya"><i class="fas fa-chevron-left"></i></button>
+        <img id="lightboxImg" src="" alt="Galeri proyek">
+        <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Berikutnya"><i class="fas fa-chevron-right"></i></button>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
+    </div>
+
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>

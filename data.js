@@ -86,12 +86,12 @@ const DEFAULT_CONTENT = {
       { key: 'infrastruktur', label: 'Infrastruktur' }
     ],
     items: [
-      { category: 'komersial', icon: 'fas fa-mug-hot', image: '', catLabel: 'Kafe / Komersial', title: 'Cafe LIMA MANGKOK', location: 'Pondok Labu, Jakarta Selatan' },
-      { category: 'komersial', icon: 'fas fa-coffee', image: '', catLabel: 'Kafe / Komersial', title: 'KATA SIAPA KOPI Kemang', location: 'Kemang, Jakarta Selatan' },
-      { category: 'residensial', icon: 'fas fa-home', image: '', catLabel: 'Residensial', title: 'Interior "Tom House"', location: 'Jakarta Selatan' },
-      { category: 'perkantoran', icon: 'fas fa-briefcase', image: '', catLabel: 'Perkantoran', title: 'Vessel Tower Office', location: 'Jakarta' },
-      { category: 'perkantoran', icon: 'fas fa-laptop-house', image: '', catLabel: 'Perkantoran', title: 'Inovagit Solution Office', location: 'Sentul, Bogor' },
-      { category: 'infrastruktur', icon: 'fas fa-tree', image: '', catLabel: 'Infrastruktur & Landsekap', title: 'BMW & Kota Podomoro Tenjo', location: 'Tangerang & Tenjo, Bogor' }
+      { category: 'komersial', icon: 'fas fa-mug-hot', image: '', catLabel: 'Kafe / Komersial', title: 'Cafe LIMA MANGKOK', location: 'Pondok Labu, Jakarta Selatan', gallery: [] },
+      { category: 'komersial', icon: 'fas fa-coffee', image: '', catLabel: 'Kafe / Komersial', title: 'KATA SIAPA KOPI Kemang', location: 'Kemang, Jakarta Selatan', gallery: [] },
+      { category: 'residensial', icon: 'fas fa-home', image: '', catLabel: 'Residensial', title: 'Interior "Tom House"', location: 'Jakarta Selatan', gallery: [] },
+      { category: 'perkantoran', icon: 'fas fa-briefcase', image: '', catLabel: 'Perkantoran', title: 'Vessel Tower Office', location: 'Jakarta', gallery: [] },
+      { category: 'perkantoran', icon: 'fas fa-laptop-house', image: '', catLabel: 'Perkantoran', title: 'Inovagit Solution Office', location: 'Sentul, Bogor', gallery: [] },
+      { category: 'infrastruktur', icon: 'fas fa-tree', image: '', catLabel: 'Infrastruktur & Landsekap', title: 'BMW & Kota Podomoro Tenjo', location: 'Tangerang & Tenjo, Bogor', gallery: [] }
     ]
   },
   stats: {

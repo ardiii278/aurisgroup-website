@@ -179,11 +179,12 @@ const SECTION_CONFIGS = [
                     { key: 'category', label: 'Kategori (key filter)', type: 'select', optionsFrom: { path: 'projects.filters', valueKey: 'key', labelKey: 'label', exclude: ['all'] } },
                     { key: 'icon', label: 'Ikon', type: 'icon' },
                     { key: 'image', label: 'Foto Proyek', type: 'image', help: 'Opsional. Jika diisi, foto menggantikan ikon.' },
+                    { key: 'gallery', label: 'Galeri Foto (bisa banyak)', type: 'gallery', help: 'Opsional. Foto-foto ini tampil saat kartu proyek diklik.' },
                     { key: 'catLabel', label: 'Label Kategori (badge)', type: 'text' },
                     { key: 'title', label: 'Judul Proyek', type: 'text' },
                     { key: 'location', label: 'Lokasi', type: 'text' }
                 ],
-                defaults: { category: 'komersial', icon: 'fas fa-building', image: '', catLabel: 'Kategori', title: 'Proyek Baru', location: 'Lokasi' }
+                defaults: { category: 'komersial', icon: 'fas fa-building', image: '', gallery: [], catLabel: 'Kategori', title: 'Proyek Baru', location: 'Lokasi' }
             }
         ]
     },
@@ -431,13 +432,30 @@ function fieldHtml(cfg, field, obj, bindPath) {
                     <input type="file" accept="image/*" hidden data-file-for="${id}">
                 </div>
             </div>`;
+    } else if (field.type === 'gallery') {
+        const galleryList = Array.isArray(value) ? value : [];
+        control = `
+            <div class="gallery-input">
+                <input type="hidden" id="${id}" data-bind="${bindPath}" data-gallery="1" value="${esc(JSON.stringify(galleryList))}">
+                <div class="gallery-preview-grid" data-gallery-preview-for="${id}">
+                    ${galleryList.map((src, gi) => `
+                        <div class="gallery-preview-item">
+                            <img src="${esc(src)}" alt="galeri ${gi + 1}">
+                            <button type="button" class="gallery-remove-btn" data-gallery-remove="${id}:${gi}" title="Hapus"><i class="fas fa-times"></i></button>
+                        </div>`).join('')}
+                </div>
+                <button type="button" class="btn-add btn-sm" data-gallery-upload-for="${id}">
+                    <i class="fas fa-upload"></i> Tambah Foto
+                </button>
+                <input type="file" accept="image/*" hidden data-gallery-file-for="${id}">
+            </div>`;
     } else {
         const listAttr = field.type === 'href' ? ' list="anchorList"' : '';
         control = `<input type="text" id="${id}" data-bind="${bindPath}" value="${esc(value)}"${listAttr}${placeholder}>`;
     }
 
     return `
-        <div class="form-group${(field.type === 'textarea' || field.type === 'image') ? ' full' : ''}">
+        <div class="form-group${(field.type === 'textarea' || field.type === 'image' || field.type === 'gallery') ? ' full' : ''}">
             <label for="${id}">${esc(field.label)}</label>
             ${control}
             ${field.help ? `<small class="field-help">${esc(field.help)}</small>` : ''}
@@ -532,6 +550,8 @@ function bindInputs(container) {
             let value = el.value;
             if (el.type === 'number') {
                 value = value === '' ? 0 : Number(value);
+            } else if (el.getAttribute('data-gallery') !== null) {
+                try { value = JSON.parse(el.value || '[]'); } catch (e) { value = []; }
             }
             setByPath(data, path, value);
             save();
@@ -590,6 +610,55 @@ function bindInputs(container) {
             updateImagePreview(container, targetId);
         });
     });
+
+    container.querySelectorAll('[data-gallery-upload-for]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-gallery-upload-for');
+            const fileInput = container.querySelector(`[data-gallery-file-for="${targetId}"]`);
+            if (fileInput) fileInput.click();
+        });
+    });
+
+    container.querySelectorAll('[data-gallery-file-for]').forEach(fileInput => {
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files && fileInput.files[0];
+            if (!file) return;
+            const targetId = fileInput.getAttribute('data-gallery-file-for');
+            const hidden = container.querySelector(`#${targetId}`);
+            processImageFile(file, (dataUrl) => {
+                if (!dataUrl) {
+                    alert('Gagal memuat gambar. Coba file lain.');
+                    return;
+                }
+                let arr = [];
+                try { arr = JSON.parse(hidden.value || '[]'); } catch (e) { arr = []; }
+                arr.push(dataUrl);
+                hidden.value = JSON.stringify(arr);
+                hidden.dispatchEvent(new Event('input', { bubbles: true }));
+                updateGalleryPreview(container, targetId);
+            });
+            fileInput.value = '';
+        });
+    });
+
+    container.querySelectorAll('[data-gallery-preview-for]').forEach(grid => {
+        grid.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-gallery-remove]');
+            if (!btn) return;
+            const attr = btn.getAttribute('data-gallery-remove');
+            const sep = attr.indexOf(':');
+            const targetId = attr.slice(0, sep);
+            const idx = parseInt(attr.slice(sep + 1), 10);
+            const hidden = container.querySelector(`#${targetId}`);
+            if (!hidden) return;
+            let arr = [];
+            try { arr = JSON.parse(hidden.value || '[]'); } catch (e) { arr = []; }
+            arr.splice(idx, 1);
+            hidden.value = JSON.stringify(arr);
+            hidden.dispatchEvent(new Event('input', { bubbles: true }));
+            updateGalleryPreview(container, targetId);
+        });
+    });
 }
 
 function updateImagePreview(container, targetId) {
@@ -602,6 +671,19 @@ function updateImagePreview(container, targetId) {
         ? `<img src="${esc(v)}" alt="preview">`
         : '<span class="image-preview-empty"><i class="fas fa-image"></i> Belum ada gambar</span>';
     if (clearBtn) clearBtn.style.display = v ? '' : 'none';
+}
+
+function updateGalleryPreview(container, targetId) {
+    const hidden = container.querySelector(`#${targetId}`);
+    const grid = container.querySelector(`[data-gallery-preview-for="${targetId}"]`);
+    if (!hidden || !grid) return;
+    let arr = [];
+    try { arr = JSON.parse(hidden.value || '[]'); } catch (e) { arr = []; }
+    grid.innerHTML = arr.map((src, gi) => `
+        <div class="gallery-preview-item">
+            <img src="${esc(src)}" alt="galeri ${gi + 1}">
+            <button type="button" class="gallery-remove-btn" data-gallery-remove="${targetId}:${gi}" title="Hapus"><i class="fas fa-times"></i></button>
+        </div>`).join('');
 }
 
 function processImageFile(file, cb) {
